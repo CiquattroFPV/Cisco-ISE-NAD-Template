@@ -1,6 +1,7 @@
 # Cisco-ISE-NAD-Template
 Cisco Identity Service Engine - NAD Template for Wired Switches
 
+```
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!! NAD TEMPLATE Wired by NS v 1.1  !!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -345,3 +346,5 @@ debug dot1x
 
 ! debug client <mac-address>
 debug client <mac-address>
+
+```
