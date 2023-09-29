@@ -348,3 +348,46 @@ debug dot1x
 debug client <mac-address>
 
 ```
+
+
+
+C3PL Template for Dot1x Fallback to MAB
+
+
+class-map type control subscriber match-all DOT1X-FAILED
+match method dot1x
+match result-type method dot1x authoritative
+
+<!-- In the initial line of the class-map, I specify that it needs to match all the conditions in the class map to trigger. Then in the match statements, I'm telling it that it has to match the 802.1x method type and fail. 
+
+The one thing that I think initimidates a lot of people with C3PL is that there are so many different options. In most cases, you're going to do a pretty static configuration but just to give you an idea of some of the cool options you have, look at the below screenshot. With so many options, you can end up configuring the wrong thing if you're trying something new but that's where testing your configuration should come into play. In the below, we could easily specify matching on webauth or mab, successful authentication, etc for some interesting triggers.  -->
+
+service-template DEFAULT_CRITICAL_VOICE_TEMPLATE
+ voice vlan
+service-template DEFAULT_CRITICAL_DATA_TEMPLATE
+policy-map type control subscriber DOT1X-DEFAULT
+  event session-started match-all <- States that if a session starts, match all the below that we define.
+    10 class always do-all <- Matches everything after a session starts and do all the actions
+    10 authenticate using dot1x priority 10 <- Action is to authenticate using dot1x with a priority of 10
+    20 authenticate using mab priority 20 <- Action is to authenticate using MAB with priority of 20 - making it a lower priority than a successful dot1x authentication if both were to pass authentication.
+  event violation match-all <-specifies a new action to take when a control violation occurs
+    10 class always do-all <- Matches everything after a session starts and do all the actions
+      10 restrict <- The action is to drop violating packets and generate a syslog
+  event agent-found match-all <- The event is if an 802.1x supplicant is detected
+  10 class always do-all <- Do all the actions
+    10 authenticate using dot1x <- Action is to authenticate using 802.1x
+
+<!-- In the above, we'd stated to attempt 802.1x and MAB authentication at the same time but the priority is for 802.1x to be the preferred authentication method. If there is a violation, drop the packets. If an 802.1x supplicant is detected,   -->
+  event authentication-failure match-all <- Now the event is an authentication failure
+    10 class AAA-DOWN do-all <- Match against our class of AAA-DOWN we configured in step 1
+      10 authorize <- Authorize the access -->
+      20 activate service-template CRITICAL <- Apply the service-template of CRITICAL-->
+      30 terminate dot1x <- Stop trying to authenticate using 802.1x -->
+      40 terminate mab <- Stop trying to authenticate using MAB -->
+      20 class DOT1X-FAILED do-all <- Matching against our DOT1X-FAILED class-->
+      10 authenticate using mab <- Fallback to authenticating using MAB -->
+
+
+
+
+
