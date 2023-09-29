@@ -381,10 +381,11 @@ policy-map type control subscriber DOT1X-DEFAULT
   event authentication-failure match-all <- Now the event is an authentication failure
     10 class AAA-DOWN do-all <- Match against our class of AAA-DOWN we configured in step 1
       10 authorize <- Authorize the access -->
-      20 activate service-template CRITICAL <- Apply the service-template of CRITICAL-->
+      20 activate service-template DEFAULT_CRITICAL_DATA_TEMPLATE <- Apply the service-template of CRITICAL-->
+      25 activate service-template DEFAULT_CRITICAL_VOICE_TEMPLATE <- Apply the service-template of CRITICAL-->
       30 terminate dot1x <- Stop trying to authenticate using 802.1x -->
       40 terminate mab <- Stop trying to authenticate using MAB -->
-      20 class DOT1X-FAILED do-all <- Matching against our DOT1X-FAILED class-->
+    20 class DOT1X-FAILED do-all <- Matching against our DOT1X-FAILED class-->
       10 authenticate using mab <- Fallback to authenticating using MAB -->
 
 ```
