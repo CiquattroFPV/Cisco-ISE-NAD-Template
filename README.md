@@ -402,7 +402,10 @@ dot1x timeout tx-period 10
 access-session port-control auto
 
 
-One thing to be aware of is that when you change the configuration to the new style, you will notice that if you issue the command show authentication session interface x/x/x detail, it will not work. That command has changed when you configure the new style and you would now use show access-session interface x/x/x details 
+One thing to be aware of is that when you change the configuration to the new style,
+you will notice that if you issue the command show authentication session interface x/x/x detail,
+ it will not work. That command has changed when you configure the new style and you would
+ now use show access-session interface x/x/x details 
 
 
 ```
