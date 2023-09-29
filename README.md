@@ -388,6 +388,23 @@ policy-map type control subscriber DOT1X-DEFAULT
     20 class DOT1X-FAILED do-all <- Matching against our DOT1X-FAILED class-->
       10 authenticate using mab <- Fallback to authenticating using MAB -->
 
+2. Apply the control policy on the interface - I'll go through the necessary commands for the interface:
+
+interface range g1/0/1-24
+switchport host
+switchport access vlan 100
+service-policy type control subscriber DOT1X-DEFAULT
+authentication periodic
+authentication timer reauthenticate server
+mab
+access-session host-mode multi-auth
+dot1x timeout tx-period 10
+access-session port-control auto
+
+
+One thing to be aware of is that when you change the configuration to the new style, you will notice that if you issue the command show authentication session interface x/x/x detail, it will not work. That command has changed when you configure the new style and you would now use show access-session interface x/x/x details 
+
+
 ```
 
 
