@@ -347,7 +347,7 @@ debug dot1x
 ! debug client <mac-address>
 debug client <mac-address>
 
-```
+
 
 
 
@@ -387,7 +387,7 @@ policy-map type control subscriber DOT1X-DEFAULT
       20 class DOT1X-FAILED do-all <- Matching against our DOT1X-FAILED class-->
       10 authenticate using mab <- Fallback to authenticating using MAB -->
 
-
+```
 
 
 
